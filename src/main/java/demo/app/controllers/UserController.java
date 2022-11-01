@@ -6,10 +6,7 @@ import demo.app.models.User;
 import demo.app.services.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -22,6 +19,11 @@ public class UserController {
     @Autowired
     public UserController(IUserService userService) {
         this.userService = userService;
+    }
+
+    @GetMapping("example")
+    public String example(){
+        return "It's working!!";
     }
 
     @PostMapping("user/save")
