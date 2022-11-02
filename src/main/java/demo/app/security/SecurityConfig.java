@@ -12,15 +12,16 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    private final JwtAuthEntryPoint authEntryPoint;
+    private final JWTAuthEntryPoint authEntryPoint;
     private final IUserService userService;
 
     @Autowired
-    public SecurityConfig(JwtAuthEntryPoint authEntryPoint, IUserService userService) {
+    public SecurityConfig(JWTAuthEntryPoint authEntryPoint, IUserService userService) {
         this.authEntryPoint = authEntryPoint;
         this.userService = userService;
     }
@@ -37,10 +38,12 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/api/v1/auth/**").permitAll()
+                .antMatchers("/api/v1/test/user").hasAuthority("USER")
+                .antMatchers("/api/v1/test/admin").hasAuthority("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();
-
+        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
@@ -53,5 +56,10 @@ public class SecurityConfig {
     @Bean
     PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public JWTAuthenticationFilter jwtAuthenticationFilter(){
+        return new JWTAuthenticationFilter();
     }
 }

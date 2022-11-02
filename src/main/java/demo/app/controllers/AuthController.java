@@ -1,17 +1,18 @@
 package demo.app.controllers;
 
 import demo.app.dtos.AddRoleToUserDto;
+import demo.app.dtos.AuthResponseDto;
 import demo.app.dtos.LoginDto;
 import demo.app.dtos.RegisterDto;
 import demo.app.models.Role;
 import demo.app.models.User;
+import demo.app.security.JWTGenerator;
 import demo.app.services.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,23 +30,26 @@ public class AuthController {
     private final IUserService userService;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
+    private final JWTGenerator jwtGenerator;
 
     @Autowired
     public AuthController(IUserService userService, AuthenticationManager authenticationManager,
-                          PasswordEncoder passwordEncoder) {
+                          PasswordEncoder passwordEncoder, JWTGenerator jwtGenerator) {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;
+        this.jwtGenerator = jwtGenerator;
     }
 
     @PostMapping("login")
-    public ResponseEntity<String> login(@RequestBody LoginDto loginDto){
+    public ResponseEntity<AuthResponseDto> login(@RequestBody LoginDto loginDto){
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginDto.username(), loginDto.password()));
-
+                new UsernamePasswordAuthenticationToken(
+                        loginDto.username(),
+                        loginDto.password()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        return ResponseEntity.ok().body("User singed success");
+        String token = jwtGenerator.generateToken(authentication);
+        return ResponseEntity.ok().body(new AuthResponseDto(token));
     }
 
     @PostMapping("register")
