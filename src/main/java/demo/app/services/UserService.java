@@ -74,6 +74,11 @@ public class UserService implements IUserService, UserDetailsService {
         return roleRepo.findByName(name);
     }
 
+    @Override
+    public boolean existByUsername(String username) {
+        return userRepo.existsByUsername(username);
+    }
+
     private Collection<GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles){
         return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
     }

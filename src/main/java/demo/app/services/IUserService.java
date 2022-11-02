@@ -9,4 +9,5 @@ public interface IUserService {
     void addRoleToUser(String username, String roleName);
     User getUser(String username);
     Role getRole(String name);
+    boolean existByUsername(String username);
 }
