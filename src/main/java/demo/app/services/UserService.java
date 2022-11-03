@@ -2,8 +2,10 @@ package demo.app.services;
 
 import demo.app.models.Role;
 import demo.app.models.User;
+import demo.app.models.VerificationToken;
 import demo.app.repos.RoleRepo;
 import demo.app.repos.UserRepo;
+import demo.app.repos.VerificationTokenRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,16 +25,23 @@ import java.util.stream.Collectors;
 public class UserService implements IUserService, UserDetailsService {
     private final UserRepo userRepo;
     private final RoleRepo roleRepo;
+    private final VerificationTokenRepo tokenRepo;
 
     @Autowired
-    public UserService(UserRepo userRepo, RoleRepo roleRepo) {
+    public UserService(UserRepo userRepo, RoleRepo roleRepo, VerificationTokenRepo tokenRepo) {
         this.userRepo = userRepo;
         this.roleRepo = roleRepo;
+        this.tokenRepo = tokenRepo;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepo.findByUsername(username);
+
+        if(!user.isEnable()){
+            //TODO return user is not enabled
+            throw new UsernameNotFoundException("User is not verified");
+        }
 
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
@@ -83,6 +92,19 @@ public class UserService implements IUserService, UserDetailsService {
     public boolean existByEmail(String email) {
         log.info("Checking if user with email {} exist", email);
         return userRepo.existsByEmail(email);
+    }
+
+    @Override
+    public void createVerificationToken(User user, String token) {
+        log.info("Creating verification token for user {}", user.getUsername());
+        VerificationToken verificationToken = new VerificationToken(user, token);
+        tokenRepo.save(verificationToken);
+    }
+
+    @Override
+    public VerificationToken getVerificationToken(String token) {
+        log.info("Fetching token {}", token);
+        return tokenRepo.findByToken(token);
     }
 
     private Collection<GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles){
