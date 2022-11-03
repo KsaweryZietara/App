@@ -10,4 +10,5 @@ public interface IUserService {
     User getUser(String username);
     Role getRole(String name);
     boolean existByUsername(String username);
+    boolean existByEmail(String email);
 }

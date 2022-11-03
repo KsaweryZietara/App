@@ -75,7 +75,14 @@ public class UserService implements IUserService, UserDetailsService {
 
     @Override
     public boolean existByUsername(String username) {
+        log.info("Checking if user {} exists", username);
         return userRepo.existsByUsername(username);
+    }
+
+    @Override
+    public boolean existByEmail(String email) {
+        log.info("Checking if user with email {} exist", email);
+        return userRepo.existsByEmail(email);
     }
 
     private Collection<GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles){

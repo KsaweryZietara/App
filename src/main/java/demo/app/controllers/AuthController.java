@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.Collections;
 
@@ -53,14 +54,19 @@ public class AuthController {
     }
 
     @PostMapping("register")
-    public ResponseEntity<String> register(@RequestBody RegisterDto registerDto){
+    public ResponseEntity<String> register(@Valid @RequestBody RegisterDto registerDto){
         if(userService.existByUsername(registerDto.username())){
             return ResponseEntity.badRequest().body("Username is taken");
+        }
+
+        if(userService.existByEmail(registerDto.email())){
+            return ResponseEntity.badRequest().body("Email is taken");
         }
 
         User user = new User();
         user.setUsername(registerDto.username());
         user.setPassword(passwordEncoder.encode(registerDto.password()));
+        user.setEmail(registerDto.email());
 
         Role roles = userService.getRole("USER");
         user.setRoles(Collections.singletonList(roles));
