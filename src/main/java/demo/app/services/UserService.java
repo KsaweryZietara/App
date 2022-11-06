@@ -1,5 +1,6 @@
 package demo.app.services;
 
+import demo.app.exceptions.UserNotEnabledException;
 import demo.app.models.Role;
 import demo.app.models.User;
 import demo.app.models.VerificationToken;
@@ -39,8 +40,7 @@ public class UserService implements IUserService, UserDetailsService {
         User user = userRepo.findByUsername(username);
 
         if(!user.isEnable()){
-            //TODO return user is not enabled
-            throw new UsernameNotFoundException("User is not verified");
+            throw new UserNotEnabledException(user.getUsername());
         }
 
         return new org.springframework.security.core.userdetails.User(

@@ -1,6 +1,8 @@
 package demo.app.events;
 
+import demo.app.dtos.EmailDetails;
 import demo.app.models.User;
+import demo.app.services.IEmailService;
 import demo.app.services.IUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +15,12 @@ import java.util.UUID;
 @Slf4j
 public class RegistrationListener implements ApplicationListener<OnRegistrationCompleteEvent> {
     private final IUserService userService;
+    private final IEmailService emailService;
 
     @Autowired
-    public RegistrationListener(IUserService userService) {
+    public RegistrationListener(IUserService userService, IEmailService emailService) {
         this.userService = userService;
+        this.emailService = emailService;
     }
 
     @Override
@@ -28,8 +32,12 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
         User user = event.getUser();
         String token = UUID.randomUUID().toString();
         userService.createVerificationToken(user, token);
-        //TODO send email
         String confirmationUrl = event.getAppUrl() + "/registrationConfirm?token=" + token;
         log.info("Activation link: {}", confirmationUrl);
+
+        String subject = "Verify your account";
+        String msgBody = "Activation link: " + confirmationUrl;
+        EmailDetails emailDetails = new EmailDetails(user.getEmail(), subject, msgBody);
+        emailService.sendSimpleMail(emailDetails);
     }
 }
