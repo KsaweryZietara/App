@@ -15,6 +15,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Getter
 @Setter
+@Table(name = "verification_tokens")
 public class VerificationToken {
     private final static int EXPIRATION = 1440;
 
