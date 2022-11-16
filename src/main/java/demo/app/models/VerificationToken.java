@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
@@ -24,11 +25,13 @@ public class VerificationToken {
     private Long id;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(nullable = false)
+    @NotNull
     private User user;
 
+    @NotNull
     private String token;
 
+    @NotNull
     private Date expiryDate;
 
     public VerificationToken(User user, String token) {
