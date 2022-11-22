@@ -1,6 +1,6 @@
 package demo.app.events;
 
-import demo.app.models.User;
+import demo.app.models.auth.User;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.context.ApplicationEvent;

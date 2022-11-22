@@ -1,9 +1,10 @@
 package demo.app.security;
 
-import demo.app.services.IUserService;
+import demo.app.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,10 +19,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
     private final JWTAuthEntryPoint authEntryPoint;
-    private final IUserService userService;
+    private final UserService userService;
 
     @Autowired
-    public SecurityConfig(JWTAuthEntryPoint authEntryPoint, IUserService userService) {
+    public SecurityConfig(JWTAuthEntryPoint authEntryPoint, UserService userService) {
         this.authEntryPoint = authEntryPoint;
         this.userService = userService;
     }
@@ -38,8 +39,7 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/api/v1/auth/**").permitAll()
-                .antMatchers("/api/v1/test/user").hasAuthority("USER")
-                .antMatchers("/api/v1/test/admin").hasAuthority("ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/v1/book/**").hasAuthority("USER")
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();

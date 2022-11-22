@@ -1,6 +1,7 @@
 package demo.app.repos;
 
-import demo.app.models.User;
+import demo.app.models.auth.User;
+import demo.app.repos.auth.UserRepo;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

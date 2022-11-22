@@ -1,6 +1,6 @@
 package demo.app.validation;
 
-import demo.app.dtos.RegisterDto;
+import demo.app.dtos.auth.RegisterDto;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

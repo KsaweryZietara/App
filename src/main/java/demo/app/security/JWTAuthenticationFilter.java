@@ -1,6 +1,6 @@
 package demo.app.security;
 
-import demo.app.services.UserService;
+import demo.app.services.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,7 +19,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private JWTGenerator jwtGenerator;
     @Autowired
-    private UserService userService;
+    private UserServiceImpl userServiceImpl;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -29,7 +29,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         if(StringUtils.hasText(token) && jwtGenerator.validateToken(token)){
             String username = jwtGenerator.getUsernameFromJWT(token);
 
-            UserDetails userDetails = userService.loadUserByUsername(username);
+            UserDetails userDetails = userServiceImpl.loadUserByUsername(username);
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                     userDetails,
                     null,

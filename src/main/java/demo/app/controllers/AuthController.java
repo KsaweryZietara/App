@@ -1,15 +1,15 @@
 package demo.app.controllers;
 
-import demo.app.dtos.AddRoleToUserDto;
-import demo.app.dtos.AuthResponseDto;
-import demo.app.dtos.LoginDto;
-import demo.app.dtos.RegisterDto;
+import demo.app.dtos.auth.AddRoleToUserDto;
+import demo.app.dtos.auth.AuthResponseDto;
+import demo.app.dtos.auth.LoginDto;
+import demo.app.dtos.auth.RegisterDto;
 import demo.app.events.OnRegistrationCompleteEvent;
-import demo.app.models.Role;
-import demo.app.models.User;
-import demo.app.models.VerificationToken;
+import demo.app.models.auth.Role;
+import demo.app.models.auth.User;
+import demo.app.models.auth.VerificationToken;
 import demo.app.security.JWTGenerator;
-import demo.app.services.IUserService;
+import demo.app.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
@@ -29,14 +29,14 @@ import java.util.Collections;
 @RestController
 @RequestMapping("api/v1/auth/")
 public class AuthController {
-    private final IUserService userService;
+    private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final JWTGenerator jwtGenerator;
     private final ApplicationEventPublisher eventPublisher;
 
     @Autowired
-    public AuthController(IUserService userService, AuthenticationManager authenticationManager,
+    public AuthController(UserService userService, AuthenticationManager authenticationManager,
                           PasswordEncoder passwordEncoder, JWTGenerator jwtGenerator, ApplicationEventPublisher eventPublisher) {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
@@ -46,7 +46,7 @@ public class AuthController {
     }
 
     @PostMapping("login")
-    public ResponseEntity<AuthResponseDto> login(@RequestBody LoginDto loginDto){
+    public ResponseEntity<AuthResponseDto> login(@Valid @RequestBody LoginDto loginDto){
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginDto.username(),

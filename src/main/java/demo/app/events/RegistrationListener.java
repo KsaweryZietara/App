@@ -1,9 +1,9 @@
 package demo.app.events;
 
-import demo.app.dtos.EmailDetails;
-import demo.app.models.User;
-import demo.app.services.IEmailService;
-import demo.app.services.IUserService;
+import demo.app.dtos.auth.EmailDetails;
+import demo.app.models.auth.User;
+import demo.app.services.EmailService;
+import demo.app.services.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -14,11 +14,11 @@ import java.util.UUID;
 @Component
 @Slf4j
 public class RegistrationListener implements ApplicationListener<OnRegistrationCompleteEvent> {
-    private final IUserService userService;
-    private final IEmailService emailService;
+    private final UserService userService;
+    private final EmailService emailService;
 
     @Autowired
-    public RegistrationListener(IUserService userService, IEmailService emailService) {
+    public RegistrationListener(UserService userService, EmailService emailService) {
         this.userService = userService;
         this.emailService = emailService;
     }
