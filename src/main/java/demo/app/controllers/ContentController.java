@@ -17,13 +17,13 @@ import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
-@RequestMapping("api/v1/book/")
-public class BookController {
+@RequestMapping("api/v1/content/")
+public class ContentController {
     private final UserService userService;
     private final BookService bookService;
 
     @Autowired
-    public BookController(UserService userService, BookService bookService) {
+    public ContentController(UserService userService, BookService bookService) {
         this.userService = userService;
         this.bookService = bookService;
     }
@@ -34,27 +34,18 @@ public class BookController {
         User user = getUserFromJWT(token);
         Author author = bookService.createAuthor(authorDto, user);
 
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("api/v1/book/author/").toUriString());
+        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("api/v1/book/author").toUriString());
         return ResponseEntity.created(uri).body("Author has been created");
     }
 
-    @PostMapping()
+    @PostMapping("book")
     public ResponseEntity<String> createBook(@Valid @RequestBody CreateBookDto bookDto,
                                              @RequestHeader (name="Authorization") String token){
         User user = getUserFromJWT(token);
         Book book = bookService.createBook(bookDto, user);
 
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("api/v1/book/").toUriString());
+        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("api/v1/book").toUriString());
         return ResponseEntity.created(uri).body("Book has been created");
-    }
-
-    @PostMapping("category")
-    public ResponseEntity<String> createCategory(@Valid @RequestBody CreateCategoryDto categoryDto,
-                                                 @RequestHeader (name = "Authorization") String token){
-        Category category = bookService.createCategory(categoryDto);
-
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("api/v1/book/category/").toUriString());
-        return ResponseEntity.created(uri).body("Category has been created");
     }
 
     @PostMapping("publisher")
@@ -63,7 +54,7 @@ public class BookController {
         User user = getUserFromJWT(token);
         Publisher publisher = bookService.createPublisher(publisherDto, user);
 
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("api/v1/book/publisher/").toUriString());
+        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("api/v1/book/publisher").toUriString());
         return ResponseEntity.created(uri).body("Publisher has been created");
     }
 
@@ -73,7 +64,7 @@ public class BookController {
         User user = getUserFromJWT(token);
         Rating rating = bookService.createRating(ratingDto, user);
 
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("api/v1/book/rating/").toUriString());
+        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("api/v1/book/rating").toUriString());
         return ResponseEntity.created(uri).body("Rating has been created");
     }
 
@@ -83,7 +74,7 @@ public class BookController {
         User user = getUserFromJWT(token);
         Review review = bookService.createReview(reviewDto, user);
 
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("api/v1/book/review/").toUriString());
+        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("api/v1/book/review").toUriString());
         return ResponseEntity.created(uri).body("Review has been created");
     }
 
@@ -93,7 +84,7 @@ public class BookController {
         User user = getUserFromJWT(token);
         Series series = bookService.createSeries(seriesDto, user);
 
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("api/v1/book/series/").toUriString());
+        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("api/v1/book/series").toUriString());
         return ResponseEntity.created(uri).body("Series has been created");
     }
 

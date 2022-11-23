@@ -100,15 +100,4 @@ public class AuthController {
         userService.saveUser(user);
         return ResponseEntity.ok().body("User has been enabled");
     }
-
-    @PostMapping("role/save")
-    public ResponseEntity<Role> saveRole(@RequestBody Role role){
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("api/v1/auth/role/save").toUriString());
-        return ResponseEntity.created(uri).body(userService.saveRole(role));
-    }
-
-    @PostMapping("role/addtouser")
-    public void addRoleToUser(@RequestBody AddRoleToUserDto dto){
-        userService.addRoleToUser(dto.username(), dto.roleName());
-    }
 }

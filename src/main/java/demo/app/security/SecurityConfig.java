@@ -39,7 +39,8 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/api/v1/auth/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/v1/book/**").hasAuthority("USER")
+                .antMatchers(HttpMethod.POST, "/api/v1/content/**").hasAuthority("USER")
+                .antMatchers("/api/v1/admin/**").hasAuthority("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();
