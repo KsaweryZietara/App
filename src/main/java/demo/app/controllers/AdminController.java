@@ -1,6 +1,7 @@
 package demo.app.controllers;
 
 import demo.app.dtos.auth.AddRoleToUserDto;
+import demo.app.dtos.auth.CreateRoleDto;
 import demo.app.dtos.domain.CreateCategoryDto;
 import demo.app.models.auth.Role;
 import demo.app.models.domain.Category;
@@ -25,13 +26,15 @@ public class AdminController {
     }
 
     @PostMapping("role")
-    public ResponseEntity<Role> saveRole(@RequestBody Role role){
+    public ResponseEntity<Role> saveRole(@Valid @RequestBody CreateRoleDto roleDto){
+        Role role = userService.saveRole(roleDto);
+
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("api/v1/admin/role").toUriString());
-        return ResponseEntity.created(uri).body(userService.saveRole(role));
+        return ResponseEntity.created(uri).body(role);
     }
 
     @PostMapping("user/role")
-    public ResponseEntity<String> addRoleToUser(@RequestBody AddRoleToUserDto dto){
+    public ResponseEntity<String> addRoleToUser(@Valid @RequestBody AddRoleToUserDto dto){
         userService.addRoleToUser(dto.username(), dto.roleName());
         return ResponseEntity.ok().body("Role has been added to user");
     }

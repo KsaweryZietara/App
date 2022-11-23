@@ -35,6 +35,16 @@ public class JWTGenerator {
         return claims.getSubject();
     }
 
+    public String getUsername(String token){
+        token = token.substring(7, token.length());
+        Claims claims = Jwts.parser()
+                .setSigningKey(SecurityConstants.JWT_SECRET)
+                .parseClaimsJws(token)
+                .getBody();
+
+        return claims.getSubject();
+    }
+
     public boolean validateToken(String token){
         try{
             Jwts.parser().setSigningKey(SecurityConstants.JWT_SECRET).parseClaimsJws(token);

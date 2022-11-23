@@ -1,5 +1,6 @@
 package demo.app.services;
 
+import demo.app.dtos.auth.CreateRoleDto;
 import demo.app.exceptions.UserNotEnabledException;
 import demo.app.models.auth.Role;
 import demo.app.models.auth.User;
@@ -56,7 +57,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public Role saveRole(Role role) {
+    public Role saveRole(CreateRoleDto roleDto) {
+        Role role = new Role();
+        role.setName(roleDto.name());
         log.info("Saving new role {} to the database", role.getName());
         return roleRepo.save(role);
     }

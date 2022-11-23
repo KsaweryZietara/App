@@ -11,6 +11,8 @@ import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.util.Date;
+
 @DataJpaTest
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 public class VerificationTokenRepoTest {
@@ -50,6 +52,7 @@ public class VerificationTokenRepoTest {
         VerificationToken token = new VerificationToken();
         token.setToken("testToken");
         token.setUser(user);
+        token.setExpiryDate(new Date());
         tokenRepo.save(token);
 
         VerificationToken returnedToken = tokenRepo.findByToken(token.getToken());

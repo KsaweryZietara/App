@@ -1,5 +1,6 @@
 package demo.app.services;
 
+import demo.app.dtos.auth.CreateRoleDto;
 import demo.app.models.auth.Role;
 import demo.app.models.auth.User;
 import demo.app.models.auth.VerificationToken;
@@ -15,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -65,13 +67,14 @@ public class UserServiceImplTest {
 
     @Test
     public void UserService_SaveRole_ReturnsRole(){
+        CreateRoleDto roleDto = new CreateRoleDto("testName");
         Role role = new Role();
         role.setId(1L);
         role.setName("testName");
 
-        when(roleRepo.save(role)).thenReturn(role);
+        when(roleRepo.save(any())).thenReturn(role);
 
-        Role returnedRole = userServiceImpl.saveRole(role);
+        Role returnedRole = userServiceImpl.saveRole(roleDto);
 
         Assertions.assertThat(returnedRole).isNotNull();
         Assertions.assertThat(returnedRole.getId()).isEqualTo(role.getId());
